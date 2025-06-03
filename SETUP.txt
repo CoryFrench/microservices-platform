@@ -1,0 +1,93 @@
+MICROSERVICES PLATFORM SETUP GUIDE
+=====================================
+
+This directory contains a polyrepo microservices platform using Git submodules.
+Each service is an independent repository but orchestrated together for easy deployment.
+
+REPOSITORIES
+------------
+Main Platform: https://github.com/CoryFrench/microservices-platform
+├── reverse-proxy:        https://github.com/CoryFrench/reverse-proxy
+├── chatgpt-daily-server: https://github.com/CoryFrench/chatgpt-daily-server  
+├── agent-directory:      https://github.com/CoryFrench/agent-directory
+├── calendar-backend:     https://github.com/CoryFrench/calendar-backend
+└── calendar-frontend:    https://github.com/CoryFrench/calendar-frontend
+
+INITIAL SETUP (New Machine)
+---------------------------
+git clone --recursive https://github.com/CoryFrench/microservices-platform.git
+cd microservices-platform
+docker-compose up -d
+
+WORKING WITH SERVICES
+--------------------
+1. Navigate to service directory:
+   cd reverse-proxy
+
+2. Make changes, commit, and push to service repo:
+   git add .
+   git commit -m "Your changes"
+   git push origin main
+
+3. Update platform to reference new service version:
+   cd ..
+   git add reverse-proxy
+   git commit -m "Update reverse-proxy to latest"
+   git push origin master
+
+USEFUL COMMANDS
+---------------
+# Update all submodules to latest commits
+git submodule update --remote --merge
+git add .
+git commit -m "Update all services to latest"
+git push origin master
+
+# Reset submodules to tracked versions
+git submodule update --init --recursive
+
+# Check submodule status
+git submodule status
+
+# Add new submodule
+git submodule add https://github.com/CoryFrench/new-service.git new-service
+
+DEVELOPMENT WORKFLOW
+-------------------
+1. Work on individual services in their directories
+2. Test services independently  
+3. Update platform when service changes are ready
+4. Deploy entire platform with docker-compose
+
+SERVICE PORTS
+-------------
+reverse-proxy:        80, 8080
+chatgpt-daily-server: 14000
+agent-directory:      14100
+calendar-backend:     14201  
+calendar-frontend:    14202
+
+GATEWAY URLS
+------------
+Gateway Dashboard:    http://localhost
+ChatGPT Daily:       http://localhost/api/chatgpt-daily/
+Agent Directory:     http://localhost/api/agent-directory/
+Calendar Backend:    http://localhost/api/calendar-backend/
+Calendar Frontend:   http://localhost/api/calendar-frontend/
+
+TROUBLESHOOTING
+---------------
+- If submodules are empty: git submodule update --init --recursive
+- If changes not showing: make sure you committed in the service directory
+- If docker issues: check that all services have proper Dockerfiles
+- If ports conflict: stop other services or change ports in docker-compose.yml
+
+BENEFITS
+--------
+✓ Independent service development and versioning
+✓ Single-command platform deployment  
+✓ Easy replication to new environments
+✓ Professional microservices architecture
+✓ Each service can have its own CI/CD pipeline
+
+Remember: This is a POLYREPO setup - each service is its own git repository! 
