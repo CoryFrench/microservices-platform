@@ -1,0 +1,15 @@
+[submodule "reverse-proxy"]
+	path = reverse-proxy
+	url = https://github.com/CoryFrench/reverse-proxy.git
+[submodule "chatgpt-daily-server"]
+	path = chatgpt-daily-server
+	url = https://github.com/CoryFrench/chatgpt-daily-server.git
+[submodule "agent-directory"]
+	path = agent-directory
+	url = https://github.com/CoryFrench/agent-directory.git
+[submodule "calendar-backend"]
+	path = calendar-backend
+	url = https://github.com/CoryFrench/calendar-backend.git
+[submodule "calendar-frontend"]
+	path = calendar-frontend
+	url = https://github.com/CoryFrench/calendar-frontend.git
