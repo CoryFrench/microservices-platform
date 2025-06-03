@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  # Reverse Proxy / API Gateway
+  reverse-proxy:
+    build:
+      context: ./reverse-proxy
+    container_name: microservices-gateway
+    ports:
+      - "80:80"
+      - "8080:80"  # Alternative port
+    depends_on:
+      - chatgpt-daily-server
+      - agent-directory
+      - calendar-backend
+      - calendar-frontend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "description=API Gateway for microservices platform"
+
+  # ChatGPT Daily Server
+  chatgpt-daily-server:
+    build:
+      context: ./chatgpt-daily-server
+    container_name: chatgpt-daily-app
+    ports:
+      - "14000:14000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:14000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "description=ChatGPT Daily GPT Server"
+
+  # Agent Directory
+  agent-directory:
+    build:
+      context: ./agent-directory
+    container_name: agent-directory-app
+    ports:
+      - "14100:14100"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:14100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "description=Agent Directory Service"
+
+  # Calendar Backend
+  calendar-backend:
+    build:
+      context: ./calendar-backend
+    container_name: calendar-backend-app
+    ports:
+      - "14201:5000"  # Internal port might be 5000, exposed as 14201
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "description=Calendar Backend API"
+
+  # Calendar Frontend
+  calendar-frontend:
+    build:
+      context: ./calendar-frontend
+    container_name: calendar-frontend-app
+    ports:
+      - "14202:80"  # React app typically runs on port 80 in container
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "description=Calendar Frontend Application"
+
+# Optional: Define a custom network for service communication
+networks:
+  default:
+    name: microservices-network
+    driver: bridge
+
+# Optional: Define volumes for persistent data
+volumes:
+  app_data:
+    driver: local 
