@@ -7,8 +7,8 @@ services:
       context: ./reverse-proxy
     container_name: microservices-gateway
     ports:
-      - "80:80"
-      - "8080:80"  # Alternative port
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:8080:80"  # Alternative port
     depends_on:
       - chatgpt-daily-server
       - agent-directory
@@ -30,7 +30,7 @@ services:
       context: ./chatgpt-daily-server
     container_name: chatgpt-daily-app
     ports:
-      - "14000:14000"
+      - "0.0.0.0:14000:14000"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:14000/health"]
@@ -47,7 +47,7 @@ services:
       context: ./agent-directory
     container_name: agent-directory-app
     ports:
-      - "14100:14100"
+      - "0.0.0.0:14100:14100"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:14100/health"]
@@ -64,7 +64,7 @@ services:
       context: ./calendar-backend
     container_name: calendar-backend-app
     ports:
-      - "14201:5000"  # Internal port might be 5000, exposed as 14201
+      - "0.0.0.0:14201:5000"  # Internal port might be 5000, exposed as 14201
     environment:
       # Microsoft Graph API credentials (mapping from .env file)
       - TENANT_ID=${MS_GRAPH_TENANT_ID}
@@ -103,7 +103,7 @@ services:
       context: ./calendar-frontend
     container_name: calendar-frontend-app
     ports:
-      - "14202:80"  # React app typically runs on port 80 in container
+      - "0.0.0.0:14202:80"  # React app typically runs on port 80 in container
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
