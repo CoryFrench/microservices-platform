@@ -15,6 +15,7 @@ services:
       - calendar-backend
       - calendar-frontend
       - youtube-summary
+      - lead-research
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
@@ -142,6 +143,40 @@ services:
       start_period: 30s
     labels:
       - "description=YouTube Summary and Transcript Service"
+
+  # Lead Research Service
+  lead-research:
+    build:
+      context: ./lead_research
+    container_name: lead-research-app
+    ports:
+      - "0.0.0.0:14400:14400"
+    environment:
+      # Google Gemini API configuration
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # Database configuration
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-Waterfront#1}
+      - DB_HOST=${DB_HOST:-10.0.2.221}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-postgres}
+      # REW API configuration
+      - REW_API_TOKEN=${REW_API_TOKEN}
+      - REW_API_BASE_URL=${REW_API_BASE_URL:-https://api.realestatewebmasters.com}
+      # Flask configuration
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - PORT=14400
+      # CrewAI configuration
+      - CREW_AI_TIMEOUT=${CREW_AI_TIMEOUT:-1800}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:14400/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s  # Longer start period due to AI model loading
+    labels:
+      - "description=Lead Research AI Service with CrewAI agents"
 
 # Optional: Define a custom network for service communication
 networks:
