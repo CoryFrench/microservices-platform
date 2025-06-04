@@ -14,6 +14,7 @@ services:
       - agent-directory
       - calendar-backend
       - calendar-frontend
+      - youtube-summary
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
@@ -113,6 +114,34 @@ services:
       start_period: 30s
     labels:
       - "description=Calendar Frontend Application"
+
+  # YouTube Summary Service
+  youtube-summary:
+    build:
+      context: ./youtube_summary
+    container_name: youtube-summary-app
+    ports:
+      - "0.0.0.0:14300:14300"
+    environment:
+      # OpenAI API configuration
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # Optional email configuration (can also be passed in requests)
+      - MAILCHIMP_API_KEY=${MAILCHIMP_API_KEY}
+      - FROM_EMAIL=${FROM_EMAIL}
+      - TO_EMAIL=${TO_EMAIL}
+      - CC_EMAILS=${CC_EMAILS}
+      # Flask configuration
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - PORT=14300
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:14300/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "description=YouTube Summary and Transcript Service"
 
 # Optional: Define a custom network for service communication
 networks:
