@@ -7,8 +7,9 @@ services:
       context: ./reverse-proxy
     container_name: microservices-gateway
     ports:
-      - "0.0.0.0:80:80"
-      - "0.0.0.0:8080:80"  # Alternative port
+      - "0.0.0.0:14999:80"  # Main external port for firewall
+      - "0.0.0.0:80:80"     # Local development port
+      - "0.0.0.0:8080:80"   # Alternative port
     depends_on:
       - chatgpt-daily-server
       - agent-directory
