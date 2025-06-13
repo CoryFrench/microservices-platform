@@ -51,6 +51,18 @@ services:
     container_name: agent-directory-app
     ports:
       - "0.0.0.0:14100:14100"
+    environment:
+      # Database configuration
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-Waterfront#1}
+      - DB_HOST=${DB_HOST:-10.0.2.221}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-postgres}
+      # Application configuration
+      - PORT=14100
+      - NODE_ENV=${NODE_ENV:-production}
+      - DIRECTORY_PASSWORD=${DIRECTORY_PASSWORD:-soldbywaterfront}
+      - SESSION_SECRET=${SESSION_SECRET:-waterfront-directory-secret}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:14100/health"]
