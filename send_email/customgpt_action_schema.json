@@ -1,0 +1,125 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Email Service API",
+    "description": "API for sending custom emails using Mandrill",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://c62f-50-172-126-210.ngrok-free.app",
+      "description": "Email service via ngrok tunnel"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "schemas": {
+      "EmailRequest": {
+        "type": "object",
+        "required": ["subject", "message_text"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "The email subject line"
+          },
+          "message_text": {
+            "type": "string",
+            "description": "The email body text content"
+          }
+        }
+      },
+      "EmailResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the email was sent successfully"
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message"
+          },
+          "result": {
+            "type": "object",
+            "description": "Raw response from Mandrill API"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message describing what went wrong"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API key required for authentication"
+      }
+    }
+  },
+  "paths": {
+    "/send-email": {
+      "post": {
+        "operationId": "sendCustomEmail",
+        "summary": "Send a custom email",
+        "description": "Sends an email with custom subject and message text to david@wfpcc.com from customgpt@wfpcc.com using Mandrill API",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - missing required fields or email failed to send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error - API key issues or server problems",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 
