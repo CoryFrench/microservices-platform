@@ -7,8 +7,7 @@ services:
       context: ./reverse-proxy
     container_name: microservices-gateway
     ports:
-      - "0.0.0.0:14999:80"  # Main external port for firewall
-      - "0.0.0.0:80:80"     # Local development port
+      - "0.0.0.0:80:80"     # Main external port for firewall
       - "0.0.0.0:8080:80"   # Alternative port
     depends_on:
       - chatgpt-daily-server
@@ -17,6 +16,7 @@ services:
       - calendar-frontend
       - youtube-summary
       - lead-research
+      - send-email
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
@@ -178,6 +178,38 @@ services:
       start_period: 60s  # Longer start period due to AI model loading
     labels:
       - "description=Lead Research AI Service with CrewAI agents"
+
+  # Send Email Service
+  send-email:
+    build:
+      context: ./send_email
+    container_name: send-email-app
+    ports:
+      - "0.0.0.0:14500:14500"
+    environment:
+      # SMTP configuration
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_SECURE=${SMTP_SECURE:-true}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      # Default sender configuration
+      - FROM_EMAIL=${FROM_EMAIL}
+      - FROM_NAME=${FROM_NAME:-Microservices Platform}
+      # Flask configuration
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - PORT=14500
+      # Optional authentication
+      - API_KEY=${EMAIL_API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:14500/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "description=Email Service for sending notifications and messages"
 
 # Optional: Define a custom network for service communication
 networks:
