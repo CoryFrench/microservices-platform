@@ -36,7 +36,7 @@ def send_email_endpoint():
         "message_text": "Email body text"
     }
     
-    Note: All emails are sent to david@wfpcc.com from customgpt@wfpcc.com
+    Note: All emails are sent to cory@wfpcc.com from customgpt@wfpcc.com
     """
     try:
         # Get API key from environment
@@ -64,7 +64,7 @@ def send_email_endpoint():
         subject = data['subject']
         message_text = data['message_text']
         from_email = "customgpt@wfpcc.com"  # Hardcoded for consistency
-        to_email = "david@wfpcc.com"  # Hardcoded for security
+        to_email = "cory@wfpcc.com"  # Hardcoded for security
 
         # Send email using the existing function
         result = send_email(
