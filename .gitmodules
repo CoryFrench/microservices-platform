@@ -10,12 +10,12 @@
 [submodule "calendar-backend"]
 	path = calendar-backend
 	url = https://github.com/CoryFrench/calendar-backend.git
-[submodule "calendar-frontend"]
-	path = calendar-frontend
-	url = https://github.com/CoryFrench/calendar-frontend.git
 [submodule "lead_research"]
 	path = lead_research
 	url = https://github.com/CoryFrench/lead_research.git
 [submodule "youtube_summary"]
 	path = youtube_summary
 	url = https://github.com/CoryFrench/youtube_summary.git
+[submodule "photo-calendar"]
+	path = photo-calendar
+	url = https://github.com/CoryFrench/calendar-frontend.git

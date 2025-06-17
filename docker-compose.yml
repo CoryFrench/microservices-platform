@@ -15,7 +15,7 @@ services:
       - chatgpt-daily-server
       - agent-directory
       - calendar-backend
-      - calendar-frontend
+      - photo-calendar
       - youtube-summary
       - lead-research
       - send-email
@@ -114,11 +114,11 @@ services:
     labels:
       - "description=Calendar Backend API"
 
-  # Calendar Frontend
-  calendar-frontend:
+  # Photo Calendar Frontend
+  photo-calendar:
     build:
-      context: ./calendar-frontend
-    container_name: calendar-frontend-app
+      context: ./photo-calendar
+    container_name: photo-calendar-app
     ports:
       - "0.0.0.0:14202:80"  # React app typically runs on port 80 in container
     restart: unless-stopped
@@ -129,7 +129,7 @@ services:
       retries: 3
       start_period: 30s
     labels:
-      - "description=Calendar Frontend Application"
+      - "description=Photo Calendar Frontend Application"
 
   # YouTube Summary Service
   youtube-summary:

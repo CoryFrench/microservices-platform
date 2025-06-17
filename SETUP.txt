@@ -11,7 +11,7 @@ Main Platform: https://github.com/CoryFrench/microservices-platform
 ├── chatgpt-daily-server: https://github.com/CoryFrench/chatgpt-daily-server  
 ├── agent-directory:      https://github.com/CoryFrench/agent-directory
 ├── calendar-backend:     https://github.com/CoryFrench/calendar-backend
-└── calendar-frontend:    https://github.com/CoryFrench/calendar-frontend
+└── photo-calendar:       https://github.com/CoryFrench/calendar-frontend
 
 INITIAL SETUP (New Machine)
 ---------------------------
@@ -65,7 +65,7 @@ reverse-proxy:        80, 8080
 chatgpt-daily-server: 14000
 agent-directory:      14100
 calendar-backend:     14201  
-calendar-frontend:    14202
+photo-calendar:       14202
 
 GATEWAY URLS
 ------------
@@ -73,7 +73,7 @@ Gateway Dashboard:    http://localhost
 ChatGPT Daily:       http://localhost/api/chatgpt-daily/
 Agent Directory:     http://localhost/api/agent-directory/
 Calendar Backend:    http://localhost/api/calendar-backend/
-Calendar Frontend:   http://localhost/api/calendar-frontend/
+Photo Calendar:      http://localhost/api/photo-calendar/
 
 TROUBLESHOOTING
 ---------------
