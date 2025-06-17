@@ -19,3 +19,6 @@
 [submodule "photo-calendar"]
 	path = photo-calendar
 	url = https://github.com/CoryFrench/calendar-frontend.git
+[submodule "send_email"]
+	path = send_email
+	url = https://github.com/CoryFrench/send-email.git
