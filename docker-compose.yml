@@ -7,10 +7,14 @@ services:
       context: ./reverse-proxy
     container_name: microservices-gateway
     ports:
-      - "0.0.0.0:80:80"     # Main external port for firewall
+      - "0.0.0.0:80:80"     # HTTP port
+      - "0.0.0.0:443:443"   # HTTPS port
       - "0.0.0.0:8080:80"   # Alternative port
     environment:
       - API_KEY=${API_KEY}
+    volumes:
+      - ./ssl-certs:/etc/letsencrypt:ro
+      - ./ssl-webroot:/var/www/certbot:ro
     depends_on:
       - chatgpt-daily-server
       - agent-directory
@@ -19,6 +23,7 @@ services:
       - youtube-summary
       - lead-research
       - send-email
+      - uptime-kuma
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
@@ -225,6 +230,37 @@ services:
     labels:
       - "description=Email Service for sending notifications and messages"
 
+  # Uptime Monitoring Service
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma-app
+    ports:
+      - "0.0.0.0:14998:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+      # Mount Docker socket for container monitoring
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/entry-page"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "description=Uptime Kuma Monitoring Dashboard"
+
+  # Certbot for SSL Certificate Management
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./ssl-certs:/etc/letsencrypt
+      - ./ssl-webroot:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email admin@waterfront-ai.com --agree-tos --no-eff-email --keep-until-expiring -d services.waterfront-ai.com
+    depends_on:
+      - reverse-proxy
+
 # Optional: Define a custom network for service communication
 networks:
   default:
@@ -234,4 +270,6 @@ networks:
 # Optional: Define volumes for persistent data
 volumes:
   app_data:
-    driver: local 
+    driver: local
+  uptime-kuma-data:
+    driver: local
