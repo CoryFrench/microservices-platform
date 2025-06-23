@@ -41,6 +41,20 @@ services:
     container_name: chatgpt-daily-app
     ports:
       - "0.0.0.0:14000:14000"
+    environment:
+      # Microsoft Graph API credentials
+      - TENANT_ID=${MS_GRAPH_TENANT_ID}
+      - CLIENT_ID=${MS_GRAPH_CLIENT_ID}
+      - CLIENT_SECRET=${MS_GRAPH_CLIENT_SECRET}
+      # Jira Configuration
+      - JIRA_API_KEY=${JIRA_API_KEY}
+      - JIRA_EMAIL=${JIRA_EMAIL}
+      - JIRA_PROJECT_KEY=${JIRA_PROJECT_KEY}
+      - JIRA_URL=${JIRA_URL}
+      # Flask Configuration
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - DEBUG=${DEBUG:-false}
+      - PORT=14000
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:14000/health"]
