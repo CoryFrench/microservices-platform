@@ -42,6 +42,12 @@ services:
     ports:
       - "0.0.0.0:14000:14000"
     environment:
+      # Database Configuration (for UUID authentication)
+      - DB_HOST=${DB_HOST:-10.0.2.221}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-postgres}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-Waterfront#1}
       # Microsoft Graph API credentials
       - TENANT_ID=${MS_GRAPH_TENANT_ID}
       - CLIENT_ID=${MS_GRAPH_CLIENT_ID}
